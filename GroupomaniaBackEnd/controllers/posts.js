@@ -1,5 +1,5 @@
 const fs = require("fs");
-//const Mysql = require("../db_connection");
+const connect = require("../db_connection");
 
 exports.createSauce = (req, res, next) => {
     console.log("creation sauce");
@@ -57,7 +57,12 @@ exports.getOnePosts = (req, res, next) => {
     };
 
     exports.deletePosts = (req, res, next) => {
-
+        connect.query(`DELETE FROM posts WHERE id=${req.params.id};DELETE FROM commentaires WHERE posts_id=${req.params.id}`, function (error, result, fields){
+            if (error) res.status(500).json({ error });
+            
+            res.status(200).json({ message: "Posts supprimé avec succés !" })
+        }); 
+        
         /*Sauce.findOne({ _id: req.params.id })
             .then((sauce) => {
                 const filename = sauce.imageUrl.split("/images/")[1];
@@ -72,23 +77,12 @@ exports.getOnePosts = (req, res, next) => {
             .catch((error) => res.status(500).json({ error }));*/
     };
     //affiche la liste de tous les posts
-    exports.getAllPosts = (req, res, next) => {
-        var mysql = require('mysql');
-        var con = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "password",
-            database: "groupomania"
-        });
-
-        con.connect(function (err) {
-            if (err) res.status(500).json({ error });
-            con.query("SELECT * FROM posts", function (err, result, fields) {
-                if (err) res.status(500).json({ error });
+    exports.getAllPosts = (req, res, next) => {         
+            connect.query("SELECT * FROM posts", function (error, result, fields) {
+                if (error) res.status(500).json({ error });
                 console.log(result);
                 res.status(200).json(result)
-            });
-        });        
+            });              
     };
     
     exports.like = (req, res, next) => {

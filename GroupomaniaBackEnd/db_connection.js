@@ -1,15 +1,18 @@
 
 var mysql = require('mysql');
 
-var con = mysql.createConnection({
+var connect = mysql.createConnection({
 host: "localhost",
 user: "root",
-password: "password"
+password: "password",
+database: "groupomania",
+multipleStatements:true
+
 });
 
-con.connect(function(err) {
+connect.connect(function(err) {
 if (err) throw err;
 console.log("Connection réussie!");
 });
 
-module.exports = con;
+module.exports = connect;
