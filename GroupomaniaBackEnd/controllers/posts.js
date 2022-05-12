@@ -1,23 +1,28 @@
 const fs = require("fs");
 const connect = require("../db_connection");
 
-exports.createSauce = (req, res, next) => {
-    console.log("creation sauce");
-    console.log(req.body);
-    const sauceObject = JSON.parse(req.body.sauce);
-    delete sauceObject._id;
-    const sauce = new Sauce({
-        ...sauceObject,
-        likes: 0,
-        dislikes: 0,
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename
-            }`,
-    });
-    sauce
-        .save()
-        .then(() => res.status(201).json({ message: "Objet enregistré !" }))
-        .catch((error) => res.status(400).json({ error }));
-};
+exports.createPost = (req, res, next) => {
+    //try permet de gérer les erreurs sans bloquer le back end 
+    try { 
+        console.log(req.body);
+    const postObject = (req.body.post);
+
+    connect.query(`INSERT  INTO posts (contenu) VALUES ("${postObject.contenu}")`, function (error, result, fields){
+
+        if (error) res.status(500).json({ error });
+        
+        res.status(201).json({ message: "Post ajouté avec succés !" })
+    }); 
+        
+    } catch (erreur) {
+        res.status(400).json({ erreur })
+    }
+    
+}
+
+
+        
+        
 //afficher un seul post
 exports.getOnePosts = (req, res, next) => {
     var mysql = require('mysql');
@@ -80,7 +85,7 @@ exports.getOnePosts = (req, res, next) => {
     exports.getAllPosts = (req, res, next) => {         
             connect.query("SELECT * FROM posts", function (error, result, fields) {
                 if (error) res.status(500).json({ error });
-                console.log(result);
+                //console.log(result);
                 res.status(200).json(result)
             });              
     };
