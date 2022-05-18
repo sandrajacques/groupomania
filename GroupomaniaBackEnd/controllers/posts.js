@@ -20,9 +20,6 @@ exports.createPost = (req, res, next) => {
     
 }
 
-
-        
-        
 //afficher un seul post
 exports.getOnePosts = (req, res, next) => {
     var mysql = require('mysql');
