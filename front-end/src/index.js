@@ -6,6 +6,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
 import Nav from './composants/Nav';
 import Home from './pages/Home';
 import Inscription from './pages/Inscription';

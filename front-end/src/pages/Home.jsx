@@ -39,6 +39,7 @@ useEffect(() => {
     fetch('http://localhost:3001/api/posts')
         .then(res => res.json())
         .then(data => setListPost(data))
+        .catch(err => alert(err))
 }, [])
 
 

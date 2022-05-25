@@ -2,7 +2,7 @@ const Mysql = require('./db_connection');
 const express = require('express');
 const postsRouter = require('./routes/posts');
 const commentairesRouter = require('./routes/commentaires');
-/*const userRoutes = require('./routes/user');*/
+const userRoutes = require('./routes/user');
 const path = require('path');
 
 const app = express();
@@ -16,6 +16,7 @@ app.use((req, res, next) => {
   app.use(express.json());
   app.use('/api/posts', postsRouter);
   app.use('/api/commentaires', commentairesRouter);
+  app.use('/api/user', userRoutes);
 const http = require('http');
 /* const app = require('./app'); */
 
