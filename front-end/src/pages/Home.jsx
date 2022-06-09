@@ -7,14 +7,22 @@ function Home() {
     const [listPost, setListPost] = useState([])
 
     const [inputContenu, setInputContenu] = useState('');
+    const [inputImg, setInputImg] = useState('');
 
     function ajouterPost() {
+
+        const postContenu = new FormData();
+        postContenu.append("post", JSON.stringify({ post: { contenu: inputContenu } }));
+        postContenu.append("image", inputImg);
+    
+
         fetch('http://localhost:3001/api/posts', { 
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ post: { contenu: inputContenu } }) })
+            //headers: { 'Content-Type': 'application/json' }, 
+            body:postContenu 
+           // body: JSON.stringify({ post: { contenu: inputContenu } }) })
             
-            .then(res => {
+    }).then(res => {
                 if (res.status === 201) {
                     //cloner le state listTaches
                     const listTemporaire = [...listPost];
@@ -69,7 +77,10 @@ function supprimerUnPost(idPost) {
 return (
     <div>
         <h1>File d'actualités</h1>
-        <input type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
+        <input type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)}/>
+        <label>
+        <input type="file" onChange={(e)=> setInputImg(e.target.files[0])}/>
+        </label>
         <button onClick={ajouterPost}>valider</button>
         <div className='cards-list'>
             {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} />)}

@@ -7,9 +7,18 @@ exports.createPost = (req, res, next) => {
         console.log(req.body);
         const postObject = req.body.post;
 
+        let imageUrl = `${req.protocol}://${req.get("host")}/images/${
+    req.file.filename
+  }`;
+  console.log("/images")
+console.log(imageUrl);
+  console.log(req.file);
+
         connect.query(
             `INSERT  INTO posts (contenu) VALUES ("${postObject.contenu}")`,
             function (error, result, fields) {
+                
+                console.log(result);
                 if (error) res.status(500).json({ error });
 
                 res.status(201).json({ message: "Post ajouté avec succés !" });
