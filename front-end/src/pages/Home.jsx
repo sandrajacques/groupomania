@@ -11,8 +11,8 @@ function Home() {
 
     function ajouterPost() {
 
-        const postContenu = new FormData();
-        postContenu.append("post", JSON.stringify({ post: { contenu: inputContenu } }));
+        const postContenu = new FormData();//insérer un fichier dans un formulaire html 
+        postContenu.append("post", JSON.stringify({contenu: inputContenu }));
         postContenu.append("image", inputImg);
     
 
@@ -24,23 +24,23 @@ function Home() {
             
     }).then(res => {
                 if (res.status === 201) {
-                    //cloner le state listTaches
-                    const listTemporaire = [...listPost];
-                    //créer un nouveau post 
-                    const newPost = { id: listTemporaire.length + 1, contenu: inputContenu, };
-                    //ajouter la nouveau post au tableau temporaire
-                    listTemporaire.push(newPost);
-                    //rafraichir le state
-                    setListPost(listTemporaire);
-                    //vider le input
-                    setInputContenu('');
+                    res.json()
+                    .then(nouvelleListPosts=>{
+                        setInputContenu('');
+                        setInputImg('');
+                        console.log('affichage nouvelle liste');
+                        console.log(nouvelleListPosts);
+                        setListPost(nouvelleListPosts);
+                    })
                 }
                 else{
                     alert('erreur: ', res.status);
                 }
             }              
         )
+        .catch(err => alert('erreur: ', err));
     }
+
 
 
 useEffect(() => {
@@ -83,7 +83,7 @@ return (
         </label>
         <button onClick={ajouterPost}>valider</button>
         <div className='cards-list'>
-            {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} />)}
+            {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} />)}
         </div>
     </div>
 )

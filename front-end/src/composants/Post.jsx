@@ -6,7 +6,7 @@ function Post(props) {
   }
   return (
     <div className="card 1">
-      <div className="card_image"><img src="https://i.redd.it/b3esnz5ra34y.jpg" alt="post" /></div>
+      {props.lienImage && <div className="card_image"><img src={props.lienImage} alt="post" /></div>}
       <div className="card_title title-black">
         <p>{props.texte}</p>
         <p className="id-post">{props.idPost}</p>

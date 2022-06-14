@@ -5,23 +5,22 @@ exports.createPost = (req, res, next) => {
     //try permet de gérer les erreurs sans bloquer le back end
     try {
         console.log(req.body);
-        const postObject = req.body.post;
+        const postObject = JSON.parse(req.body.post);
 
-        let imageUrl = `${req.protocol}://${req.get("host")}/images/${
-    req.file.filename
-  }`;
-  console.log("/images")
-console.log(imageUrl);
-  console.log(req.file);
+        let imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
 
         connect.query(
-            `INSERT  INTO posts (contenu) VALUES ("${postObject.contenu}")`,
+            `INSERT  INTO posts (contenu, imgUrl) VALUES ("${postObject.contenu}", "${imageUrl}")`,
             function (error, result, fields) {
                 
                 console.log(result);
                 if (error) res.status(500).json({ error });
 
-                res.status(201).json({ message: "Post ajouté avec succés !" });
+                connect.query("SELECT * FROM posts", function (error, result, fields) {
+                    if (error) res.status(500).json({ error });
+                
+                    res.status(201).json(result);
+                });
             }
         );
     } catch (erreur) {

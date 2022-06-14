@@ -3,8 +3,7 @@ const path = require("path");
 
 const stockage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log("multer config");
-        console.log(file);
+        
         cb(null, "images");
     },
     
