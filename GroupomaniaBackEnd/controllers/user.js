@@ -7,15 +7,18 @@ exports.signup = (req, res, next) => {
     bcrypt
         .hash(req.body.password, 10)
         .then((hash) => {
-            const user = new User({
-                email: req.body.email,
-                password: hash,
+            let sql = `INSERT INTO groupomania.utilisateurs (email, password, nom, prenom) VALUES ('${req.body.email}', '${hash}', '${req.body.name}', '${req.body.prenom}')`;
+
+            connect.query(sql, function (error, result, fields) {
+                if (error) {
+                    res.status(500).json({ message: JSON.stringify(error) });
+                    return;
+                }
+                console.log(result);
+                res.status(200).json({
+                    message: "Merci pour votre inscription!",
+                });
             });
-            user.save()
-                .then(() =>
-                    res.status(201).json({ message: "Utilisateur créé !" })
-                )
-                .catch((error) => res.status(400).json({ error }));
         })
         .catch((error) => res.status(500).json({ error }));
 };
@@ -23,26 +26,30 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
     console.log("login");
     console.log(req.body);
-    connect.query(`SELECT * FROM utilisateurs WHERE email = "${req.body.email}"`, function (error, result, fields) {
-        if (error){
-            res.status(500).json({ message: JSON.stringify(error) });
-            return;
-        };        
-        console.log(result);
-        if (result.length == 0) {
-            res.status(401).json({ message: "Utilisateur non trouvé !" });
-            return;}
-        const utilisateur = result[0];
-        if (utilisateur.password == req.body.password) {    
-        res.status(200).json({message:"utilisateur authentifié"});
-        }else{
-            res.status(401).json({ message: "Mot de passe incorrect !" });
+    connect.query(
+        `SELECT * FROM utilisateurs WHERE email = "${req.body.email}"`,
+        function (error, result, fields) {
+            if (error) {
+                res.status(500).json({ message: JSON.stringify(error) });
+                return;
+            }
+            console.log(result);
+            if (result.length == 0) {
+                res.status(401).json({ message: "Utilisateur non trouvé !" });
+                return;
+            }
+            const utilisateur = result[0];
+            if (utilisateur.password == req.body.password) {
+                res.status(200).json({ message: "utilisateur authentifié" });
+            } else {
+                res.status(401).json({ message: "Mot de passe incorrect !" });
+            }
         }
-    });
+    );
 
     //res.status(500).json({"message": "authentification réussie"});
 
-   /*  User.findOne({ email: req.body.email })
+    /*  User.findOne({ email: req.body.email })
         .then((user) => {
             if (!user) {
                 return res
@@ -71,19 +78,21 @@ exports.login = (req, res, next) => {
         .catch((error) => res.status(500).json({ error })); */
 };
 exports.profil = (req, res, next) => {
-    console.log(req.body);
-    bcrypt
-        .hash(req.body.password, 10)
-        .then((hash) => {
-            const user = new User({
-                email: req.body.email,
-                password: hash,
-            });
-            user.save()
-                .then(() =>
-                    res.status(201).json({ message: "Utilisateur créé !" })
-                )
-                .catch((error) => res.status(400).json({ error }));
-        })
-        .catch((error) => res.status(500).json({ error }));
+    try {
+        console.log(req.params.id);
+        let sql = `SELECT * FROM groupomania.utilisateurs WHERE id = '${req.params.id}'`;
+        connect.query(sql, function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                res.status(500).json({ message: JSON.stringify(error) });
+                return;
+            }
+            console.log(result);
+            res.status(200).json(result);
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error });
+    }
 };
