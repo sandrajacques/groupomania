@@ -93,7 +93,7 @@ export default function Inscription() {
                 </div>
             </div>
             <div className="d-grid">
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn">
                 valider l'inscription
                 </button>
             </div>
