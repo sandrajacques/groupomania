@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Post from '../composants/Post'
-
-
-<source />
+import { UserContext } from '../context/Context';
 
 
 /*utilisation de useEffect pour charger les données du backend au lancement de la page*/
 function Home() {
+    const { user } = useContext(UserContext);
     const [listPost, setListPost] = useState([])
 
     const [inputContenu, setInputContenu] = useState('');
@@ -17,11 +16,14 @@ function Home() {
         const postContenu = new FormData();//insérer un fichier dans un formulaire html 
         postContenu.append("post", JSON.stringify({ contenu: inputContenu }));
         postContenu.append("image", inputImg);
+        postContenu.append('userId', user.id);
 
 
         fetch('http://localhost:3001/api/posts', {
             method: 'POST',
-            //headers: { 'Content-Type': 'application/json' }, 
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+            },
             body: postContenu
             // body: JSON.stringify({ post: { contenu: inputContenu } }) })
 
@@ -47,7 +49,12 @@ function Home() {
 
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/posts')
+const token=user.token;
+        fetch('http://localhost:3001/api/posts', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
             .then(res => res.json())
             .then(data => setListPost(data))
             .catch(err => alert(err))

@@ -1,14 +1,16 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useNavigate } from "react-router-dom";
+import { UserContext } from '../context/Context';
 
 export default function Login() {
     const [inputEmail, setInputEmail] = useState('');
     const [inputPassword, setInputPassword] = useState('');
+    const { user, setUser } = useContext(UserContext);
     let navigate = useNavigate();
 
     function envoyerFormulaire(e) {
         e.preventDefault();
-        const infosLogin = { email: inputEmail, password: inputPassword };
+        const infosLogin = { email: inputEmail, pwd: inputPassword };
         // la requête http POST permet d'envoyer des données au backend
         fetch('http://localhost:3001/api/user/login', {
             method: 'POST',
@@ -18,7 +20,8 @@ export default function Login() {
             .then(res => {
                 if (res.status === 200) {
                     res.json().then(retourBackend => {
-                        alert(retourBackend.message);
+                    setUser({...user, ...retourBackend, isAuth:true});
+                    
                         navigate("/");
                     })
                 }

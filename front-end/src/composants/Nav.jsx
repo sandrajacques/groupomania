@@ -1,42 +1,37 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { UserContext } from '../context/Context'
 
 export default function Nav() {
+    const { user } = useContext(UserContext);
+
     return (
-        <nav>            
-        {/*  <div className="input-group md-form form-sm form-1 pl-0">
-                <div className="input-group-prepend">
-                    <span className="input-group-text purple lighten-3" id="basic-text1">
-                        <i className="bi bi-search"></i>
-                    </span>
-                </div>
-                    <input
-                        className="form-control my-0 py-1"
-                        type="text"
-                        placeholder="recherche"
-                        aria-label="Search" ></input>              
-            </div>         */}           
+        <nav>
+            <h3>
+                Bienvenue {user.prenom + ' ' + user.nom}
+            </h3>
             
             <ul className='navigation'>
                 <li><Link to="/">Accueil</Link> </li>
                 <li><Link to="/profil">Profil</Link> </li>
-                <li><Link to="/login">Connexion</Link> </li>
+                { !user.isAuth && <li><Link to="/login">Connexion</Link> </li>}
                 <li><Link to="/signUp">Inscription</Link> </li>
+                {user.isAuth &&<li><Link to="/">Déconnexion</Link> </li>}
 
                 <div className="input-group md-form form-sm form-1 pl-0">
-                <div className="input-group-prepend">
-                    <span className="input-group-text grey lighten-3" id="basic-text1">
-                        <i className="bi bi-search"></i>
-                    </span>
-                </div>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text grey lighten-3" id="basic-text1">
+                            <i className="bi bi-search"></i>
+                        </span>
+                    </div>
                     <input
                         className="form-control my-0 py-1 white "
                         type="text"
                         placeholder="recherche"
-                        aria-label="Search" ></input>              
-            </div>   
+                        aria-label="Search" ></input>
+                </div>
             </ul>
-            
+
         </nav>
     )
 }

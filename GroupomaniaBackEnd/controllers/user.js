@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {
     console.log(req.body);
+
     bcrypt
         .hash(req.body.password, 10)
         .then((hash) => {
@@ -39,11 +40,27 @@ exports.login = (req, res, next) => {
                 return;
             }
             const utilisateur = result[0];
-            if (utilisateur.password == req.body.password) {
-                res.status(200).json({ message: "utilisateur authentifié" });
-            } else {
-                res.status(401).json({ message: "Mot de passe incorrect !" });
-            }
+            bcrypt.compare(req.body.pwd, utilisateur.password).then((valid) => {
+                if (!valid) {
+                    res.status(401).json({
+                        message: "Mot de passe incorrect !",
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    email: utilisateur.email,
+                    nom: utilisateur.nom,
+                    prenom: utilisateur.prenom,
+                    id: utilisateur.id,
+                    token: jwt.sign(
+                        { userId: utilisateur.id },
+                        "RANDOM_TOKEN_SECRET",
+                        {
+                            expiresIn: "12h",
+                        }
+                    ),
+                });
+            });
         }
     );
 
@@ -90,7 +107,6 @@ exports.profil = (req, res, next) => {
             console.log(result);
             res.status(200).json(result);
         });
-
     } catch (error) {
         console.log(error);
         res.status(500).json({ error });

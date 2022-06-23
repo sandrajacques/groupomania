@@ -3,8 +3,15 @@
     --secondaire:#FFD7D7;
     --tertiaire:#4E5166;
 }
-body {
+*{
     box-sizing: border-box!important;
+}
+img{
+    display: block;
+    max-width: 100%;
+}
+body {
+    
     font-family: "Lato", sans-serif !important;
     max-width: 768px !important;
     background-color: var(--secondaire)!important;
@@ -51,7 +58,7 @@ h1{
     position: relative;
     margin: 30px auto;
     width: 300px;
-    height: 300px;
+    
     border-radius: 40px;
     box-shadow: 5px 5px 30px 7px rgba(0, 0, 0, 0.25),
         -5px -5px 30px 7px rgba(0, 0, 0, 0.22);
@@ -60,8 +67,7 @@ h1{
 }
 
 .card .card_image {
-    width: inherit;
-    height: inherit;
+   
     border-radius: 40px;
 }
 
@@ -126,9 +132,10 @@ nav a {
 }
 
 
-.boutonSuppr{
+.boutons{
     display: flex!important;
-    align-content: flex-start!important;
+    justify-content: space-between!important;
+    
 }
 .form-connexion {
     display: flex;
