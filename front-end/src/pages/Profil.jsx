@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import Nav from '../composants/Nav';
 
 export default function Profil() {
   const [profil, setProfil] = useState({});
@@ -12,7 +13,10 @@ export default function Profil() {
   }, [])
 
   return (
-    <><h1><p>{JSON.stringify(profil)}</p></h1>
+    
+    <>
+    <Nav></Nav>
+    <h1><p>{JSON.stringify(profil)}</p></h1>
     <div className="container rounded mt-5 mb-5">
       <div className="row">
 

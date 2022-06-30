@@ -1,22 +1,30 @@
 const fs = require("fs");
 const connect = require("../db_connection");
 
+
 exports.createPost = (req, res, next) => {
     //try permet de gérer les erreurs sans bloquer le back end
     try {
-        console.log(req.body);
+        
         const postObject = JSON.parse(req.body.post);
-
-        let imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+        
+        if(req.auth.userId.toString() !==req.body.userId.toString()) {
+                    
+            res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
+            return;
+        }
+        let imageUrl='';
+        if(req.file && req.file.filename)
+            imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
 
         connect.query(
-            `INSERT  INTO posts (contenu, imgUrl) VALUES ("${postObject.contenu}", "${imageUrl}")`,
+            `INSERT  INTO posts (contenu, imgUrl, horodatage) VALUES ("${postObject.contenu}", "${imageUrl}", "${postObject.horodatage}")`,
             function (error, result, fields) {
                 
                 console.log(result);
                 if (error) res.status(500).json({ error });
 
-                connect.query("SELECT * FROM posts", function (error, result, fields) {
+                connect.query("SELECT * FROM posts order by horodatage desc", function (error, result, fields) {
                     if (error) res.status(500).json({ error });
                 
                     res.status(201).json(result);
@@ -24,6 +32,7 @@ exports.createPost = (req, res, next) => {
             }
         );
     } catch (erreur) {
+        console.log(erreur);
         res.status(400).json({ erreur });
     }
 };
@@ -58,6 +67,11 @@ exports.modifySauce = (req, res, next) => {
 };
 
 exports.deletePosts = (req, res, next) => {
+   /*  if(req.auth.userId.toString() !==req.body.userId.toString()) {
+                    
+        res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
+        return;
+    } */
     connect.query(
         `DELETE FROM posts WHERE id=${req.params.id};DELETE FROM commentaires WHERE posts_id=${req.params.id}`,
         function (error, result, fields) {
@@ -82,7 +96,7 @@ exports.deletePosts = (req, res, next) => {
 };
 //affiche la liste de tous les posts
 exports.getAllPosts = (req, res, next) => {
-    connect.query("SELECT * FROM posts", function (error, result, fields) {
+    connect.query("SELECT * FROM posts order by horodatage desc", function (error, result, fields) {
         if (error) res.status(500).json({ error });
         //console.log(result);
         res.status(200).json(result);

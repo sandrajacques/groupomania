@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react'
 import Post from '../composants/Post'
 import { UserContext } from '../context/Context';
+import Nav from '../composants/Nav';
 
 
 /*utilisation de useEffect pour charger les données du backend au lancement de la page*/
@@ -14,7 +15,8 @@ function Home() {
     function ajouterPost() {
 
         const postContenu = new FormData();//insérer un fichier dans un formulaire html 
-        postContenu.append("post", JSON.stringify({ contenu: inputContenu }));
+        postContenu.append("post", JSON.stringify({ contenu: inputContenu, horodatage:new Date().toISOString()
+        }));
         postContenu.append("image", inputImg);
         postContenu.append('userId', user.id);
 
@@ -86,6 +88,7 @@ const token=user.token;
 
     return (
         <div>
+            <Nav></Nav>
             <h1>File d'actualités</h1>
 
             <input type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
@@ -98,7 +101,7 @@ const token=user.token;
 
             <div className='cards-list'>
                 <div className="card_title title-black">
-                    {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} />)}
+                    {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} horodatage={post.horodatage}/>)}
 
                 </div>
             </div>

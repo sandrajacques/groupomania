@@ -160,5 +160,16 @@ nav a {
     border: solid 1px black !important;
     width: 150px !important;
 }
+.presentation{
+display: flex;
+justify-content: space-between;
+align-items: stretch;
+}
+@media (max-width: 768px) {
+    .presentation{
+        flex-flow: column-reverse wrap-reverse;
+
+    }
+}
 
 

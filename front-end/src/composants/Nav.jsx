@@ -12,11 +12,11 @@ export default function Nav() {
             </h3>
             
             <ul className='navigation'>
-                <li><Link to="/">Accueil</Link> </li>
+                <li><Link to="/home">Accueil</Link> </li>
                 <li><Link to="/profil">Profil</Link> </li>
                 { !user.isAuth && <li><Link to="/login">Connexion</Link> </li>}
-                <li><Link to="/signUp">Inscription</Link> </li>
-                {user.isAuth &&<li><Link to="/">Déconnexion</Link> </li>}
+                {/* <li><Link to="/signUp">Inscription</Link> </li> */}
+                {user.isAuth &&<li><Link to="/logout">Déconnexion</Link> </li>}
 
                 <div className="input-group md-form form-sm form-1 pl-0">
                     <div className="input-group-prepend">

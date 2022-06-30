@@ -22,7 +22,7 @@ export default function Login() {
                     res.json().then(retourBackend => {
                     setUser({...user, ...retourBackend, isAuth:true});
                     
-                        navigate("/");
+                        navigate("/home");
                     })
                 }
                 else {

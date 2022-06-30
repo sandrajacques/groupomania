@@ -1,5 +1,10 @@
+import {formatDateTime} from '../utils';
+
 
 function Post(props) {
+
+  const datePost = new Date(props.horodatage);
+
   function supprimerPost() {
     props.supprimerCePost(props.idPost);
     console.log("supprimerPost");
@@ -7,6 +12,7 @@ function Post(props) {
   return (
     <div className="card p-3">
       <h2>{props.texte}</h2>
+      {formatDateTime(datePost)}
       {/* <div className="card_title title-black"> */}
 
       {props.lienImage && <div className="card_image"><img src={props.lienImage} alt="post" /></div>}
