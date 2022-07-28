@@ -15,7 +15,8 @@ function Home() {
     function ajouterPost() {
 
         const postContenu = new FormData();//insérer un fichier dans un formulaire html 
-        postContenu.append("post", JSON.stringify({ contenu: inputContenu, horodatage:new Date().toISOString()
+        postContenu.append("post", JSON.stringify({
+            contenu: inputContenu, horodatage: new Date().toISOString()
         }));
         postContenu.append("image", inputImg);
         postContenu.append('userId', user.id);
@@ -51,7 +52,7 @@ function Home() {
 
 
     useEffect(() => {
-const token=user.token;
+        const token = user.token;
         fetch('http://localhost:3001/api/posts', {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -101,7 +102,7 @@ const token=user.token;
 
             <div className='cards-list'>
                 <div className="card_title title-black">
-                    {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} horodatage={post.horodatage}/>)}
+                    {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} horodatage={post.horodatage} />)}
 
                 </div>
             </div>

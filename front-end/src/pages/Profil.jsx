@@ -22,10 +22,10 @@ export default function Profil() {
 
         <div className="col-md-3 border-right">
           <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-            <img className="rounded-circle mt-5" width="150px" alt='avatar' src="" />
+            <img className="avatar" width="150px" alt='avatar' src="" />
 
             <span className="font-weight-bold"></span>
-            <span className="text-black-50">edogaru@mail.com.my</span>
+            
           </div>
         </div>
 
@@ -37,7 +37,7 @@ export default function Profil() {
             </div>
 
             <div className="row mt-2">
-              <div className="col-md-6"><label className="labels">Nom</label>
+              <div className="col-md-6"><label className="labels">nom</label>
                 <input type="text" className="form-control" placeholder="Nom" value="" />
               </div>
               <div className="col-md-6"><label className="labels">Prénom</label>
@@ -73,8 +73,5 @@ export default function Profil() {
         
       </div>
     </div></>
- /*  <h1>profil</h1>
-      <p>{JSON.stringify(profil)}</p> */
-    
   )
 } 

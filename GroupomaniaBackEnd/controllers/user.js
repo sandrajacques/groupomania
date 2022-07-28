@@ -8,7 +8,7 @@ exports.signup = (req, res, next) => {
     bcrypt
         .hash(req.body.password, 10)
         .then((hash) => {
-            let sql = `INSERT INTO groupomania.utilisateurs (email, password, nom, prenom) VALUES ('${req.body.email}', '${hash}', '${req.body.name}', '${req.body.prenom}')`;
+            let sql = `INSERT INTO groupomania.utilisateurs (email, password, nom, prenom, avatar) VALUES ('${req.body.email}', '${hash}', '${req.body.name}', '${req.body.prenom}', ${req.body.avatar})`;
 
             connect.query(sql, function (error, result, fields) {
                 if (error) {
@@ -51,6 +51,7 @@ exports.login = (req, res, next) => {
                     email: utilisateur.email,
                     nom: utilisateur.nom,
                     prenom: utilisateur.prenom,
+                    avatar:utilisateur.avatar,
                     id: utilisateur.id,
                     token: jwt.sign(
                         { userId: utilisateur.id },

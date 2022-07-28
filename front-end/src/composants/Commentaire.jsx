@@ -1,8 +1,9 @@
 
 
- function Commentaire(props) {
+export default function Commentaire(props) {
   return (
-    <div>{props.textCom}</div>
+    <div>
+      {props.textCom}
+    </div>
   )
 }
-export default Commentaire
