@@ -103,7 +103,7 @@ function Post(props) {
         <button onClick={ajouterCommentaire}>valider</button>
       </div>
       <div className="listeCommentaires">
-        {listCommentaires.map(commentaire => <Commentaire key={commentaire.id} userId={user.id}  textCom={commentaire.message} idComm={commentaire.id} supprimerCeComm={supprimerUnComm} />)}
+        {listCommentaires.map(commentaire => <Commentaire key={commentaire.id} userId={user.id}  idAuthor={commentaire.idAuthor} textCom={commentaire.message} idComm={commentaire.id} supprimerCeComm={supprimerUnComm} />)}
 
       </div>
     </div>

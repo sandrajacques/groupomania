@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 
 
 export default function Commentaire(props) {
@@ -5,10 +6,14 @@ export default function Commentaire(props) {
     props.supprimerCeComm(props.idComm);
     
   }
+  useEffect(()=>{ console.log("vérification props");
+  console.log(props);},[]);
+ 
   return (
     <div>
       {props.textCom}
-      {<button onClick={supprimerComm} className="btn btn-delete"><i className="bi bi-trash3"></i></button>}
+      {(props.userId===props.idAuthor)&& 
+      <button onClick={supprimerComm} className="btn btn-delete"><i className="bi bi-trash3"></i></button>}
     </div>
     
   )

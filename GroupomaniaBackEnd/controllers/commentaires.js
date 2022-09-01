@@ -1,12 +1,14 @@
 const connect = require("../db_connection");
 
-exports.getAllCommentaires = (req, res, next) => {     
-
-    connect.query(`SELECT * FROM commentaires where posts_id=${req.params.id}`, function (error, result, fields) {
-        if (error) res.status(500).json({ error });
-        //console.log(result);
-        res.status(200).json(result);
-    });
+exports.getAllCommentaires = (req, res, next) => {
+    connect.query(
+        `SELECT * FROM commentaires where posts_id=${req.params.id}`,
+        function (error, result, fields) {
+            if (error) res.status(500).json({ error });
+            //console.log(result);
+            res.status(200).json(result);
+        }
+    );
 };
 
 exports.createCommentaire = (req, res, next) => {
@@ -25,15 +27,23 @@ exports.createCommentaire = (req, res, next) => {
             imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`; */
 
         connect.query(
-            `INSERT  INTO commentaires (message,posts_id,user_id) VALUES ("${req.body.message}",${req.body.postId},${req.body.userId})`,
+            `INSERT  INTO commentaires (message,posts_id,idAuthor) VALUES ("${req.body.message}",${req.body.postId},${req.body.userId})`,
             function (error, result, fields) {
                 console.log(result);
-                if (error) res.status(500).json({ error });
+                if (error) {
+                    res.status(500).json({ error });
+                    return;
+                }
 
                 connect.query(
-                    "SELECT * FROM commentaires where posts_id='"+req.body.postId+"' ",
+                    "SELECT * FROM commentaires where posts_id='" +
+                        req.body.postId +
+                        "' ",
                     function (error, result, fields) {
-                        if (error) res.status(500).json({ error });
+                        if (error) {
+                            res.status(500).json({ error });
+                            return;
+                        }
 
                         res.status(201).json(result);
                     }
@@ -68,13 +78,14 @@ exports.getOneCommentaires = (req, res, next) => {
     });
 };
 exports.deleteCommentaire = (req, res) => {
-   
     connect.query(
         `DELETE FROM commentaires WHERE id=${req.params.id};`,
         function (error, result, fields) {
             if (error) res.status(500).json({ error });
 
-            res.status(200).json({ message: "Commentaire supprimé avec succés !" });
+            res.status(200).json({
+                message: "Commentaire supprimé avec succés !",
+            });
         }
-    );   
+    );
 };
