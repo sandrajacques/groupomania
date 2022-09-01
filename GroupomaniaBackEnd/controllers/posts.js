@@ -1,34 +1,43 @@
 const fs = require("fs");
 const connect = require("../db_connection");
 
-
-exports.createPost = (req, res, next) => {
+exports.createPost = (req, res) => {
     //try permet de gérer les erreurs sans bloquer le back end
     try {
-        
         const postObject = JSON.parse(req.body.post);
-        
-        if(req.auth.userId.toString() !==req.body.userId.toString()) {
-                    
-            res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
+
+        if (req.auth.userId.toString() !== req.body.idAuthor.toString()) {
+            res.status(401).json({
+                message: "Vous n'êtes pas autorisé à créer ce post",
+            });
             return;
         }
-        let imageUrl='';
-        if(req.file && req.file.filename)
-            imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
-
+        let imageUrl = "";
+        if (req.file && req.file.filename)
+            imageUrl = `${req.protocol}://${req.get("host")}/images/${
+                req.file.filename
+            }`;
+console.log(postObject);
         connect.query(
-            `INSERT  INTO posts (contenu, imgUrl, horodatage) VALUES ("${postObject.contenu}", "${imageUrl}", "${postObject.horodatage}")`,
+            `INSERT  INTO posts (contenu, imgUrl, horodatage, idAuthor) VALUES ("${postObject.contenu}", "${imageUrl}", "${postObject.horodatage}","${postObject.idAuthor}")`,
             function (error, result, fields) {
-                
                 console.log(result);
-                if (error) res.status(500).json({ error });
+                if (error) {
+                    res.status(500).json({ error });
+                    return;
+                }
 
-                connect.query("SELECT * FROM posts order by horodatage desc", function (error, result, fields) {
-                    if (error) res.status(500).json({ error });
-                
-                    res.status(201).json(result);
-                });
+                connect.query(
+                    "SELECT * FROM posts order by horodatage desc",
+                    function (error, result, fields) {
+                        if (error) {
+                            res.status(500).json({ error });
+                            return;
+                        }
+
+                        res.status(201).json(result);
+                    }
+                );
             }
         );
     } catch (erreur) {
@@ -67,7 +76,7 @@ exports.modifySauce = (req, res, next) => {
 };
 
 exports.deletePosts = (req, res, next) => {
-   /*  if(req.auth.userId.toString() !==req.body.userId.toString()) {
+    /*  if(req.auth.userId.toString() !==req.body.userId.toString()) {
                     
         res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
         return;
@@ -96,11 +105,14 @@ exports.deletePosts = (req, res, next) => {
 };
 //affiche la liste de tous les posts
 exports.getAllPosts = (req, res, next) => {
-    connect.query("SELECT * FROM posts order by horodatage desc", function (error, result, fields) {
-        if (error) res.status(500).json({ error });
-        //console.log(result);
-        res.status(200).json(result);
-    });
+    connect.query(
+        "SELECT * FROM posts order by horodatage desc",
+        function (error, result, fields) {
+            if (error) res.status(500).json({ error });
+            //console.log(result);
+            res.status(200).json(result);
+        }
+    );
 };
 
 exports.like = (req, res, next) => {

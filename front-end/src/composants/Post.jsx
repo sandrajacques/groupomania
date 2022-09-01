@@ -94,7 +94,8 @@ function Post(props) {
       <div className="boutons">
         <button className="btn btn"><i className="bi bi-hand-thumbs-up"></i></button>
         <button className="btn btn"><i className="bi bi-chat"></i></button>
-        <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>
+        {(user.id===props.idAuthor)&& 
+          <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>}
 
       </div>
       <div className='formAjoutCommentaire'>

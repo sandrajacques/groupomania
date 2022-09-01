@@ -8,7 +8,7 @@ exports.signup = (req, res, next) => {
     bcrypt
         .hash(req.body.password, 10)
         .then((hash) => {
-            let sql = `INSERT INTO groupomania.utilisateurs (email, password, nom, prenom, avatar) VALUES ('${req.body.email}', '${hash}', '${req.body.name}', '${req.body.prenom}', ${req.body.avatar})`;
+            let sql = `INSERT INTO groupomania.utilisateurs (email, password, nom, prenom) VALUES ('${req.body.email}', '${hash}', '${req.body.name}', '${req.body.prenom}')`;
 
             connect.query(sql, function (error, result, fields) {
                 if (error) {

@@ -16,10 +16,10 @@ function Home() {
 
         const postContenu = new FormData();//insérer un fichier dans un formulaire html 
         postContenu.append("post", JSON.stringify({
-            contenu: inputContenu, horodatage: new Date().toISOString()
+            contenu: inputContenu, horodatage: new Date().toISOString(), idAuthor:user.id
         }));
         postContenu.append("image", inputImg);
-        postContenu.append('userId', user.id);
+        postContenu.append('idAuthor', user.id);
 
 
         fetch('http://localhost:3001/api/posts', {
@@ -102,7 +102,7 @@ function Home() {
 
             <div className='cards-list'>
                 <div className="card_title title-black">
-                    {listPost.map(post => <Post key={post.id} idPost={post.id} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} horodatage={post.horodatage} />)}
+                    {listPost.map(post => <Post key={post.id} idPost={post.id} idAuthor={post.idAuthor} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} horodatage={post.horodatage} />)}
 
                 </div>
             </div>
