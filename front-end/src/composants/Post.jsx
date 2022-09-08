@@ -7,6 +7,7 @@ import Commentaire from './Commentaire';
 function Post(props) {
   const [listCommentaires, setListCommentaires] = useState([])
   const [inputContenu, setInputContenu] = useState('');
+  const [listLikes, setListLikes] = useState([])
   const { user } = useContext(UserContext);
 
   const datePost = new Date(props.horodatage);
@@ -21,7 +22,15 @@ function Post(props) {
         .then(res => res.json())
         .then(data => setListCommentaires(data))
         .catch(err => console.log(err))
+
+        fetch('http://localhost:3001/api/likes/'+ props.idPost, {
+      
+      })
+          .then(res => res.json())
+          .then(data => setListLikes(data))
+          .catch(err => console.log(err))
 }, [])
+
 
 
   function ajouterCommentaire() {
@@ -78,6 +87,33 @@ function Post(props) {
 
   }
 
+  function ajouterLike() {
+    
+   
+    fetch('http://localhost:3001/api/likes', {
+      method: 'POST',
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify({ postId: props.idPost, idAuthor: user.id })
+    })
+
+      .then(res => {
+        if (res.status === 201) {
+          res.json()
+            .then(nouvelleListLikes => {
+              
+              console.log('affichage nouvelle liste');
+              console.log(nouvelleListLikes);
+              setListLikes(nouvelleListLikes);
+            })
+        }
+        else {
+          alert('erreur: ', res.status);
+        }
+      }
+      )
+      .catch(err => alert('erreur: ', err));
+  }
+
   return (
     <div className="card p-3">
       <h2>{props.texte}</h2>
@@ -92,7 +128,10 @@ function Post(props) {
 
 
       <div className="boutons">
-        <button className="btn btn"><i className="bi bi-hand-thumbs-up"></i></button>
+     
+        <button onClick ={ajouterLike} className="btn btn"> {listLikes.find(like=>(like.idAuthor==user.id))?<i class="bi bi-hand-thumbs-up-fill"></i>:<i className="bi bi-hand-thumbs-up"></i>}
+        {listLikes.length > 0 && listLikes.length}
+        </button>
         <button className="btn btn"><i className="bi bi-chat"></i></button>
         {(user.id===props.idAuthor)&& 
           <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>}

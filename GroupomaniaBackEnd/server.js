@@ -3,6 +3,7 @@ const express = require('express');
 const postsRouter = require('./routes/posts');
 const commentairesRouter = require('./routes/commentaires');
 const userRoutes = require('./routes/user');
+const likesRouter = require('./routes/likes');
 const path = require('path');
 
 const app = express();
@@ -17,7 +18,9 @@ app.use((req, res, next) => {
   app.use('/api/posts', postsRouter);
   app.use('/api/commentaires', commentairesRouter);
   app.use('/api/user', userRoutes);
+  app.use('/api/likes', likesRouter);
   app.use('/images', express.static(path.join(__dirname, 'images')));
+  
 const http = require('http');
 /* const app = require('./app'); */
 
