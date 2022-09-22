@@ -51,3 +51,29 @@ exports.getAllLikes = (req, res, next) => {
         }
     );
 };
+exports.deleteLike = (req, res, next) => {
+    /*  if(req.auth.userId.toString() !==req.body.userId.toString()) {
+                    
+        res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
+        return;
+    } */
+    connect.query(
+        `DELETE FROM likes WHERE posts_id=${req.params.postId} AND idAuthor=${req.params.idAuthor};`,
+        function (error, result, fields) {
+            if (error) res.status(500).json({ error });
+            connect.query(
+                "SELECT * FROM likes where posts_id = " + req.params.postId,
+                function (error, result, fields) {
+                    if (error) {
+                        res.status(500).json({ error });
+                        return;
+                    }
+
+                    res.status(201).json(result);
+                }
+            );        
+        }
+    );
+
+    
+};

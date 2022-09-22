@@ -1,5 +1,5 @@
 import { formatDateTime } from '../utils';
-import { useState, useContext,useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/Context';
 import Commentaire from './Commentaire';
 
@@ -14,22 +14,22 @@ function Post(props) {
 
   useEffect(() => {
     const token = user.token;
-    fetch('http://localhost:3001/api/commentaires/'+ props.idPost, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+    fetch('http://localhost:3001/api/commentaires/' + props.idPost, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-        .then(res => res.json())
-        .then(data => setListCommentaires(data))
-        .catch(err => console.log(err))
+      .then(res => res.json())
+      .then(data => setListCommentaires(data))
+      .catch(err => console.log(err))
 
-        fetch('http://localhost:3001/api/likes/'+ props.idPost, {
-      
-      })
-          .then(res => res.json())
-          .then(data => setListLikes(data))
-          .catch(err => console.log(err))
-}, [])
+    fetch('http://localhost:3001/api/likes/' + props.idPost, {
+
+    })
+      .then(res => res.json())
+      .then(data => setListLikes(data))
+      .catch(err => console.log(err))
+  }, [])
 
 
 
@@ -88,11 +88,11 @@ function Post(props) {
   }
 
   function ajouterLike() {
-    
-   
+    const dejaLike=listLikes.find(like => (like.idAuthor == user.id)); 
+    if (!dejaLike) {
     fetch('http://localhost:3001/api/likes', {
       method: 'POST',
-      headers: {  'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ postId: props.idPost, idAuthor: user.id })
     })
 
@@ -100,7 +100,7 @@ function Post(props) {
         if (res.status === 201) {
           res.json()
             .then(nouvelleListLikes => {
-              
+
               console.log('affichage nouvelle liste');
               console.log(nouvelleListLikes);
               setListLikes(nouvelleListLikes);
@@ -112,6 +112,18 @@ function Post(props) {
       }
       )
       .catch(err => alert('erreur: ', err));
+      return;
+    }
+    fetch('http://localhost:3001/api/likes/' + props.idPost + '/' + user.id, { method: 'DELETE', })
+      .then(res => {
+        if (res.status === 201) {
+         res.json()
+         .then(resultats => setListLikes(resultats));
+        }
+        else {
+          alert('erreur')
+        }
+      })
   }
 
   return (
@@ -128,12 +140,12 @@ function Post(props) {
 
 
       <div className="boutons">
-     
-        <button onClick ={ajouterLike} className="btn btn"> {listLikes.find(like=>(like.idAuthor==user.id))?<i class="bi bi-hand-thumbs-up-fill"></i>:<i className="bi bi-hand-thumbs-up"></i>}
-        {listLikes.length > 0 && listLikes.length}
+        
+        <button onClick={ajouterLike} className="btn btn"> {listLikes.find(like => (like.idAuthor == user.id)) ? <i class="bi bi-hand-thumbs-up-fill"></i> : <i className="bi bi-hand-thumbs-up"></i>}
+          {listLikes.length > 0 ? listLikes.length:"  j'aime"}
         </button>
         <button className="btn btn"><i className="bi bi-chat"></i></button>
-        {(user.id===props.idAuthor)&& 
+        {(user.id === props.idAuthor) &&
           <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>}
 
       </div>
@@ -142,7 +154,7 @@ function Post(props) {
         <button onClick={ajouterCommentaire}>valider</button>
       </div>
       <div className="listeCommentaires">
-        {listCommentaires.map(commentaire => <Commentaire key={commentaire.id} userId={user.id}  idAuthor={commentaire.idAuthor} textCom={commentaire.message} idComm={commentaire.id} supprimerCeComm={supprimerUnComm} />)}
+        {listCommentaires.map(commentaire => <Commentaire key={commentaire.id} userId={user.id} idAuthor={commentaire.idAuthor} textCom={commentaire.message} idComm={commentaire.id} supprimerCeComm={supprimerUnComm} />)}
 
       </div>
     </div>
