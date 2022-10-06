@@ -113,3 +113,27 @@ exports.profil = (req, res, next) => {
         res.status(500).json({ error });
     }
 };
+exports.changeProfil = (req, res, next) => {
+    try {
+        const profilObject = JSON.parse(req.body.profil);
+        let imageUrl = "";
+        if (req.file && req.file.filename)
+            imageUrl = `${req.protocol}://${req.get("host")}/images/${
+                req.file.filename
+            }`;
+        console.log(req.params.id);
+        let sql = `UPDATE utilisateurs SET nom = '${profilObject.nom}', prenom='${profilObject.prenom}', photo='${imageUrl}'  WHERE id = '${req.params.id}'`;
+        connect.query(sql, function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                res.status(500).json({ message: JSON.stringify(error) });
+                return;
+            }
+            console.log(result);
+            res.status(201).json(result);
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error });
+    }
+};

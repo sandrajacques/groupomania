@@ -168,6 +168,9 @@ display: flex;
 justify-content: space-between;
 align-items: stretch;
 }
+.form-control{
+    color:black!important;
+}
 @media (max-width: 768px) {
     .presentation{
         flex-flow: column-reverse wrap-reverse;

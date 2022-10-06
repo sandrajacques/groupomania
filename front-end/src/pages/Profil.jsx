@@ -1,17 +1,71 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Nav from '../composants/Nav';
+import avatar from '../images/avatar.png';
+import { UserContext } from '../context/Context';
 
 export default function Profil() {
   const [profil, setProfil] = useState({});
+  const [inputImg, setInputImg] = useState('');
+  const [image, setImage] = useState(null);
+  const [inputNom, setInputNom] = useState('');
+  const [inputPrenom, setInputPrenom] = useState('');
+  const [inputEmail, setInputEmail] = useState('');
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/user/profil/1')
-      .then(res => res.json())
-      .then(data => setProfil(data))
-      .catch(err => alert(err))
+    setInputNom(user.nom);
+    setInputPrenom(user.prenom);
+    
   }, [])
 
+  useEffect(() => {
+    try {
+      if (typeof inputImg === "string") {
+        setImage(inputImg);
+      }
+      else {
+        const fileReader = new FileReader();
+        fileReader.onload = (e) => {
+          setImage(e.target.result);
+        }
+        fileReader.readAsDataURL(inputImg);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+
+  }, [inputImg]);
+
+  function changerProfil(){
+    
+      const profilContenu = new FormData();//insérer un fichier dans un formulaire html 
+      profilContenu.append("profil", JSON.stringify({
+          nom: inputNom, prenom:inputPrenom
+      }));
+      profilContenu.append("image", inputImg);
+    
+      fetch('http://localhost:3001/api/user/profil/'+ user.id, {
+          method: 'PUT',
+          headers: {
+              Authorization: `Bearer ${user.token}`,
+          },
+          body: profilContenu
+          // body: JSON.stringify({ post: { contenu: inputContenu } }) })
+
+      }).then(res => {
+          if (res.status === 201) {
+            alert('votre profil a bien été sauvegardé');
+          }
+          else {
+              alert('erreur: ', res.status);
+          }
+      }
+      )
+          .catch(err => alert('erreur: ', err));
+  }
+
+  
   return (
     
     <>
@@ -22,7 +76,8 @@ export default function Profil() {
 
         <div className="col-md-3 border-right">
           <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-            <img className="avatar" width="150px" alt='avatar' src="" />
+            <img className="avatar" width="150px" alt='avatar' src={image ? image:avatar} />
+            <input type="file" onChange={(e) => setInputImg(e.target.files[0])} />
 
             <span className="font-weight-bold"></span>
             
@@ -37,35 +92,19 @@ export default function Profil() {
             </div>
 
             <div className="row mt-2">
-              <div className="col-md-6"><label className="labels">nom</label>
-                <input type="text" className="form-control" placeholder="Nom" value="" />
+              <div className="col-md-12"><label className="labels">nom</label>
+                <input type="text" className="form-control" placeholder="Nom" value={inputNom} onChange={(e) => setInputNom(e.target.value)} />
               </div>
-              <div className="col-md-6"><label className="labels">Prénom</label>
-                <input type="text" className="form-control" value="" placeholder="Prénom" />
+              <div className="col-md-12 mt-3"><label className="labels">Prénom</label>
+                <input type="text" className="form-control" placeholder="Prénom"  value={inputPrenom} onChange={(e) => setInputPrenom(e.target.value)} />
               </div>
-            </div>
-
-            <div className="row mt-3">
-              <div className="col-md-12"><label className="labels">Numéro portable</label>
-                <input type="text" className="form-control" placeholder="entrer numéro de portable" value="" /></div>
-              <div className="col-md-12"><label className="labels">Adresse </label>
-                <input type="text" className="form-control" placeholder="entrer votre adresse" value="" /></div>
-              <div className="col-md-12"><label className="labels">Complément d'adresse</label>
-                <input type="text" className="form-control" placeholder="apt, Bat, etage" value="" /></div>
-              <div className="col-md-12"><label className="labels">Code postal</label>
-                <input type="text" className="form-control" placeholder="entrer code postal" value="" /></div>
-              <div className="col-md-12"><label className="labels">Ville</label>
-                <input type="text" className="form-control" placeholder="entrer votre ville" value="" /></div>
-              <div className="col-md-12"><label className="labels">Pays</label>
-                <input type="text" className="form-control" placeholder="entrer votre pays" value="" /></div>
-              <div className="col-md-12"><label className="labels">Email</label>
+              <div className="col-md-12 mt-3"><label className="labels">Email</label>
                 <input type="text" className="form-control" placeholder="entrer votre adresse email" value="" /></div>
-              <div className="col-md-12"><label className="labels">Poste</label>
-                <input type="text" className="form-control" placeholder="Poste occupé au sein de l'entreprise" value="" /></div>
             </div>
 
+            
             <div className="mt-5 text-center">
-              <button className="btn profile-button" type="button">Enregistrer le Profil</button>
+              <button onClick={changerProfil} className="btn profile-button" type="button">Enregistrer le Profil</button>
             </div>
           </div>
         </div>

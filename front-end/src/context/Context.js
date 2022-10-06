@@ -7,6 +7,7 @@ export const initialUser = {
     prenom: "",
     nom: "",
     id: "",
+    photo:"",
     token: "",
     isAuth: false,
 };
