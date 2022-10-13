@@ -14,10 +14,8 @@ exports.createPost = (req, res) => {
         }
         let imageUrl = "";
         if (req.file && req.file.filename)
-            imageUrl = `${req.protocol}://${req.get("host")}/images/${
-                req.file.filename
-            }`;
-console.log(postObject);
+            imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+        console.log(postObject);
         connect.query(
             `INSERT  INTO posts (contenu, imgUrl, horodatage, idAuthor) VALUES ("${postObject.contenu}", "${imageUrl}", "${postObject.horodatage}","${postObject.idAuthor}")`,
             function (error, result, fields) {
@@ -61,11 +59,10 @@ exports.getOnePosts = (req, res, next) => {
 exports.modifySauce = (req, res, next) => {
     const sauceObject = req.file
         ? {
-              ...JSON.parse(req.body.sauce),
-              imageUrl: `${req.protocol}://${req.get("host")}/images/${
-                  req.file.filename
-              }`,
-          }
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename
+                }`,
+        }
         : { ...req.body };
     Sauce.updateOne(
         { _id: req.params.id },
@@ -81,16 +78,23 @@ exports.deletePosts = (req, res, next) => {
         res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
         return;
     } */
-    connect.query(
-        `DELETE FROM posts WHERE id=${req.params.id};DELETE FROM commentaires WHERE posts_id=${req.params.id}`,
-        function (error, result, fields) {
-            if (error) res.status(500).json({ error });
+    try {
+       /*  console.log("requete photo");
+        console.log(req.headers);
+        const filename = req.headers.photo.split("/images/")[1];
 
-            res.status(200).json({ message: "Posts supprimé avec succés !" });
-        }
-    );
+        fs.unlink(`images/${filename}`, () => {//supprimer l'image de la sauce à supprimer */
+            connect.query(
+                `DELETE FROM posts WHERE id=${req.params.id};DELETE FROM commentaires WHERE posts_id=${req.params.id}`,
+                function (error, result, fields) {
+                    if (error) res.status(500).json({ error });
 
-    
+                    res.status(200).json({ message: "Posts supprimé avec succés !" });
+                });
+        //});
+    } catch (error) {
+res.status(500).json({ error });
+    }
 };
 //affiche la liste de tous les posts
 exports.getAllPosts = (req, res, next) => {

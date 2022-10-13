@@ -138,3 +138,16 @@ exports.changeProfil = (req, res, next) => {
         res.status(500).json({ error });
     }
 };
+exports.deleteProfil = (req, res, next) => {
+
+    connect.query(
+        `DELETE FROM utilisateurs WHERE id=${req.params.id}`,
+        function (error, result, fields) {
+            if (error) return res.status(500).json({ error });
+
+            res.status(200).json({ message: "Profil supprimé avec succés !" });
+        }
+    );
+
+    
+};

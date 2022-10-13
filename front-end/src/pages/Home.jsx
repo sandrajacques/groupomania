@@ -88,7 +88,7 @@ function Home() {
     }
 
     return (
-        <div>
+        <div className="container">
             <Nav></Nav>
             <h1>File d'actualités</h1>
 

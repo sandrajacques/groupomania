@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from 'react'
 import Nav from '../composants/Nav';
 import avatar from '../images/avatar.png';
 import { UserContext } from '../context/Context';
+import { useNavigate } from "react-router-dom";
 
 export default function Profil() {
   
@@ -11,6 +12,7 @@ export default function Profil() {
   const [inputNom, setInputNom] = useState('');
   const [inputPrenom, setInputPrenom] = useState('');  
   const { user } = useContext(UserContext);
+  let navigate = useNavigate();
 
   useEffect(() => {
     setInputNom(user.nom);
@@ -64,11 +66,34 @@ export default function Profil() {
       )
           .catch(err => alert('erreur: ', err));
   }
+  function deleteProfil(){
+      
+    fetch('http://localhost:3001/api/user/profil/'+ user.id, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+            'photo':'user.photo'
+        },
+      
+
+    }).then(res => {
+        if (res.status === 200) {
+          alert('votre profil a bien été supprimé');
+          navigate("/logout");
+        }
+        else {
+            alert('erreur: ', res.status);
+        }
+    }
+    )
+        .catch(err => alert('erreur: ', err));
+}
+
 
   
   return (
     
-    <>
+    <div className="container">
     <Nav></Nav>
     
     <div className="container rounded mt-5 mb-5">
@@ -105,11 +130,14 @@ export default function Profil() {
             <div className="mt-5 text-center">
               <button onClick={changerProfil} className="btn profile-button" type="button">Enregistrer le Profil</button>
             </div>
+            <div className="mt-5 text-center">
+              <button onClick={deleteProfil} className="btn btn-danger profile-button" type="button">Supprimer le Profil</button>
+            </div>
           </div>
         </div>
 
         
       </div>
-    </div></>
+    </div></div>
   )
 } 
