@@ -20,6 +20,8 @@ export default function Login() {
             .then(res => {
                 if (res.status === 200) {
                     res.json().then(retourBackend => {
+                        console.log("photo ok");
+                        console.log(retourBackend);
                     setUser({...user, ...retourBackend, isAuth:true});
                     
                         navigate("/home");

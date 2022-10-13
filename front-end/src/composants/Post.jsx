@@ -145,8 +145,8 @@ function Post(props) {
           {listLikes.length > 0 ? listLikes.length:"  j'aime"}
         </button>
         <button className="btn btn"><i className="bi bi-chat"></i></button>
-        {(user.id === props.idAuthor) &&
-          <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>}
+        {((user.id === props.idAuthor) || (user.isAdmin)) ?
+          <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>:null}
 
       </div>
       <div className='formAjoutCommentaire'>

@@ -5,17 +5,17 @@ import avatar from '../images/avatar.png';
 import { UserContext } from '../context/Context';
 
 export default function Profil() {
-  const [profil, setProfil] = useState({});
+  
   const [inputImg, setInputImg] = useState('');
   const [image, setImage] = useState(null);
   const [inputNom, setInputNom] = useState('');
-  const [inputPrenom, setInputPrenom] = useState('');
-  const [inputEmail, setInputEmail] = useState('');
+  const [inputPrenom, setInputPrenom] = useState('');  
   const { user } = useContext(UserContext);
 
   useEffect(() => {
     setInputNom(user.nom);
     setInputPrenom(user.prenom);
+    setInputImg(user.photo);
     
   }, [])
 
@@ -70,7 +70,7 @@ export default function Profil() {
     
     <>
     <Nav></Nav>
-    <h1><p>{JSON.stringify(profil)}</p></h1>
+    
     <div className="container rounded mt-5 mb-5">
       <div className="row">
 
@@ -85,6 +85,7 @@ export default function Profil() {
         </div>
 
         <div className="col-md-5 border-right">
+        {user.isAdmin ?<span className="badge badge-success">Admin</span>:null}
           <div className="p-3 py-5">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="text-right"> Votre Profil</h4>
@@ -98,8 +99,6 @@ export default function Profil() {
               <div className="col-md-12 mt-3"><label className="labels">Prénom</label>
                 <input type="text" className="form-control" placeholder="Prénom"  value={inputPrenom} onChange={(e) => setInputPrenom(e.target.value)} />
               </div>
-              <div className="col-md-12 mt-3"><label className="labels">Email</label>
-                <input type="text" className="form-control" placeholder="entrer votre adresse email" value="" /></div>
             </div>
 
             
