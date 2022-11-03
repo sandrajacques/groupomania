@@ -56,20 +56,32 @@ exports.getOnePosts = (req, res, next) => {
     );
 };
 
-exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file
-        ? {
-            ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename
-                }`,
-        }
-        : { ...req.body };
-    Sauce.updateOne(
-        { _id: req.params.id },
-        { ...sauceObject, _id: req.params.id }
-    )
-        .then(() => res.status(200).json({ message: "Objet modifié !" }))
-        .catch((error) => res.status(400).json({ error }));
+exports.modifyPost = (req, res, next) => {
+    try {
+        const postObject = JSON.parse(req.body.post);
+        let imageUrl = "";
+        if (req.file && req.file.filename)
+            imageUrl = `${req.protocol}://${req.get("host")}/images/${
+                req.file.filename
+            }`;
+            
+        console.log(req.params.id);
+        console.log('verification de postObject');
+        console.log(postObject);
+        let sql = `UPDATE posts SET contenu = '${postObject.contenu}',  imgUrl='${imageUrl}'  WHERE id = '${req.params.id}'`;
+        connect.query(sql, function (error, result, fields) {
+            if (error) {
+                console.log(error);
+                res.status(500).json({ message: JSON.stringify(error) });
+                return;
+            }
+            console.log(result);
+            res.status(200).json(result);
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error });
+    }
 };
 
 exports.deletePosts = (req, res, next) => {
@@ -79,11 +91,12 @@ exports.deletePosts = (req, res, next) => {
         return;
     } */
     try {
-       /*  console.log("requete photo");
-        console.log(req.headers);
-        const filename = req.headers.photo.split("/images/")[1];
+    
+        console.log("requete photo");
+        console.log(req.photo);
+        const filename = req.photo.split("/images/")[1];
 
-        fs.unlink(`images/${filename}`, () => {//supprimer l'image de la sauce à supprimer */
+        fs.unlink(`images/${filename}`, () => {//supprimer l'image du post à supprimer
             connect.query(
                 `DELETE FROM posts WHERE id=${req.params.id};DELETE FROM commentaires WHERE posts_id=${req.params.id}`,
                 function (error, result, fields) {
@@ -91,7 +104,7 @@ exports.deletePosts = (req, res, next) => {
 
                     res.status(200).json({ message: "Posts supprimé avec succés !" });
                 });
-        //});
+        });
     } catch (error) {
 res.status(500).json({ error });
     }

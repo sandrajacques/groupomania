@@ -62,7 +62,7 @@ function Post(props) {
   }
 
   function supprimerPost() {
-    props.supprimerCePost(props.idPost);
+    props.supprimerCePost(props.idPost,props.lienImage);
     console.log("supprimerPost");
   }
 
@@ -125,6 +125,12 @@ function Post(props) {
         }
       })
   }
+  function updatePost() {
+    const { idPost, texte, lienImage } = props;
+    props.updatePost(idPost, texte, lienImage);
+  }
+
+
 
   return (
     <div className="card p-3">
@@ -147,6 +153,10 @@ function Post(props) {
         <button className="btn btn"><i className="bi bi-chat"></i></button>
         {((user.id === props.idAuthor) || (user.isAdmin)) ?
           <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>:null}
+  
+  {(user.id === props.idAuthor) &&
+          <button onClick={updatePost} className="btn btn-delete"><i className="bi bi-pencil-square"></i></button>}
+
 
       </div>
       <div className='formAjoutCommentaire'>

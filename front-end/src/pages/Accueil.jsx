@@ -19,7 +19,7 @@ export default function Accueil() {
 
                     <div className="d-grid">
                         <button type="submit" className="btn">
-                            Inscription <Link to="/signUp">Inscription</Link>
+                            Inscription <Link to="/signUp"><span className="inscription">Inscription</span></Link>
                         </button>
                     </div>
                     <p className='card-text'>Vous avez déjà un compte ?</p>

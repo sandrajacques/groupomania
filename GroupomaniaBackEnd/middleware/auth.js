@@ -12,7 +12,11 @@ module.exports = (req, res, next) => {
             throw "Invalid user ID";
         } else {
             req.auth = { userId };
+            if (req.headers.photo) {
+                req.photo = req.headers.photo;
+            }
             next();
+            
         }
     } catch {
         res.status(401).json({
