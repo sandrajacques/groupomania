@@ -64,7 +64,7 @@ exports.modifyPost = (req, res, next) => {
             imageUrl = `${req.protocol}://${req.get("host")}/images/${
                 req.file.filename
             }`;
-            
+
         console.log(req.params.id);
         console.log('verification de postObject');
         console.log(postObject);
@@ -94,6 +94,7 @@ exports.deletePosts = (req, res, next) => {
     
         console.log("requete photo");
         console.log(req.photo);
+        if(req.photo){
         const filename = req.photo.split("/images/")[1];
 
         fs.unlink(`images/${filename}`, () => {//supprimer l'image du post à supprimer
@@ -105,6 +106,15 @@ exports.deletePosts = (req, res, next) => {
                     res.status(200).json({ message: "Posts supprimé avec succés !" });
                 });
         });
+        return
+    }
+    connect.query(
+        `DELETE FROM posts WHERE id=${req.params.id};DELETE FROM commentaires WHERE posts_id=${req.params.id}`,
+        function (error, result, fields) {
+            if (error) res.status(500).json({ error });
+
+            res.status(200).json({ message: "Posts supprimé avec succés !" });
+        });   
     } catch (error) {
 res.status(500).json({ error });
     }
