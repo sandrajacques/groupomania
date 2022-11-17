@@ -56,19 +56,22 @@ exports.getOnePosts = (req, res, next) => {
     );
 };
 
+
 exports.modifyPost = (req, res, next) => {
     try {
         const postObject = JSON.parse(req.body.post);
         let imageUrl = "";
-        if (req.file && req.file.filename)
-            imageUrl = `${req.protocol}://${req.get("host")}/images/${
-                req.file.filename
-            }`;
+        let sql = "";
+        if (req.file && req.file.filename) {
+            imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+            sql = `UPDATE posts SET contenu = '${postObject.contenu}',  imgUrl='${imageUrl}'  WHERE id = '${req.params.id}'`;
+        } else {
+            sql = `UPDATE posts SET contenu = '${postObject.contenu}' WHERE id = '${req.params.id}'`;
+        }
 
         console.log(req.params.id);
         console.log('verification de postObject');
         console.log(postObject);
-        let sql = `UPDATE posts SET contenu = '${postObject.contenu}',  imgUrl='${imageUrl}'  WHERE id = '${req.params.id}'`;
         connect.query(sql, function (error, result, fields) {
             if (error) {
                 console.log(error);
@@ -86,12 +89,12 @@ exports.modifyPost = (req, res, next) => {
 
 exports.deletePosts = (req, res, next) => {
     /*  if(req.auth.userId.toString() !==req.body.userId.toString()) {
-                    
+
         res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
         return;
     } */
     try {
-    
+
         console.log("requete photo");
         console.log(req.photo);
         if(req.photo){

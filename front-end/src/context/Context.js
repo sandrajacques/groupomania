@@ -9,7 +9,7 @@ export const initialUser = {
     id: "",
     photo:"",
     token: "",
-    isAuth: false,
+    isAdmin: false,
 };
 
 export const UserProvider = ({ children }) => {

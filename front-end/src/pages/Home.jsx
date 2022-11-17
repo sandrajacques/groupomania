@@ -10,37 +10,40 @@ function Home() {
     const [listPost, setListPost] = useState([])
 
     const [inputContenu, setInputContenu] = useState('');
-    const [inputImg, setInputImg] = useState('');
-    const [showModal, setShowModal] = useState(false);
     const [inputUpdateContenu, setInputUpdateContenu] = useState('');
+
+    const [inputImg, setInputImg] = useState('');
     const [inputUpdateImg, setInputUpdateImg] = useState('');
+
+    const [showModal, setShowModal] = useState(false);
     const [updateIdPost, setUpdateIdPost] = useState('');
+
     const [updateImgFile, setUpdateImgFile] = useState(null);
 
     useEffect(() => {
         try {
-            if (typeof inputImg === "string") {
+            if (typeof inputUpdateImg === "string") {
                 setUpdateImgFile(inputUpdateImg);
             }
             else {
-            const fileReader = new FileReader();
-            fileReader.onload = (e) => {
-            setUpdateImgFile(e.target.result);
+                const fileReader = new FileReader();
+                fileReader.onload = (e) => {
+                    setUpdateImgFile(e.target.result);
+                }
+                fileReader.readAsDataURL(inputUpdateImg);
             }
-            fileReader.readAsDataURL(inputUpdateImg);
-        }
         } catch (error) {
-        console.log(error.message);
+            console.log(error.message);
         }
-    
+
     }, [inputUpdateImg]);
-    
+
 
     function ajouterPost() {
 
-        const postContenu = new FormData();//insérer un fichier dans un formulaire html 
+        const postContenu = new FormData();//insérer un fichier dans un formulaire html
         postContenu.append("post", JSON.stringify({
-            contenu: inputContenu, horodatage: new Date().toISOString(), idAuthor:user.id
+            contenu: inputContenu, horodatage: new Date().toISOString(), idAuthor: user.id
         }));
         postContenu.append("image", inputImg);
         postContenu.append('idAuthor', user.id);
@@ -89,39 +92,39 @@ function Home() {
         setShowModal(false);
     }
 
-    function savePost(){
+    function savePost() {
         console.log("Data to update: ");
         console.log(inputUpdateContenu);
         console.log(inputUpdateImg);
 
-        const postContenu = new FormData();//insérer un fichier dans un formulaire html 
+        const postContenu = new FormData();//insérer un fichier dans un formulaire html
         postContenu.append("post", JSON.stringify({
             contenu: inputUpdateContenu,
-            
+
         }));
-        postContenu.append("image", updateImgFile);
-    
-        fetch('http://localhost:3001/api/posts/'+ updateIdPost, {
+        if (inputUpdateImg !== '')
+            postContenu.append("image", inputUpdateImg);
+
+        fetch('http://localhost:3001/api/posts/' + updateIdPost, {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${user.token}`,
             },
             body: postContenu
-            // body: JSON.stringify({ post: { contenu: inputContenu } }) })
 
         }).then(res => {
             if (res.status === 200) {
-            alert('modification enregistrée avec succés !');
-            fetch('http://localhost:3001/api/posts', {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            })
-                .then(res => res.json())
-                .then(data => setListPost(data))
-                .catch(err => alert(err))
+                alert('modification enregistrée avec succés !');
+                fetch('http://localhost:3001/api/posts', {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                })
+                    .then(res => res.json())
+                    .then(data => setListPost(data))
+                    .catch(err => alert(err))
 
-            setShowModal(false);
+                setShowModal(false);
             }
             else {
                 alert('erreur: ', res.status);
@@ -130,6 +133,7 @@ function Home() {
         )
             .catch(err => alert('erreur: ', err));
     }
+
     useEffect(() => {
         const token = user.token;
         fetch('http://localhost:3001/api/posts', {
@@ -142,22 +146,21 @@ function Home() {
             .catch(err => alert(err))
     }, [])
 
-
-
     //supprimer un post
-    function supprimerUnPost(idPost,lienImage) {
+    function supprimerUnPost(idPost, lienImage) {
         //supprimer sur le backend
 
-        fetch('http://localhost:3001/api/posts/' + idPost, { method: 'DELETE',
-        headers: {
-            Authorization: `Bearer ${user.token}`,
-            photo:lienImage
-        },
-    })
+        fetch('http://localhost:3001/api/posts/' + idPost, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+                photo: lienImage
+            },
+        })
             .then(res => {
                 if (res.status === 200) {
-                    //supprimer sur le frontend        
-                    //cloner le state 
+                    //supprimer sur le frontend
+                    //cloner le state
                     const listPostClone = [...listPost]
                     //filtrer les posts qui ne sont pas les mêmes que l'idPost
                     const listPostFiltre = listPostClone.filter(post => post.id !== idPost)
@@ -204,9 +207,9 @@ function Home() {
                             <input type="text" className="form-control" value={inputUpdateContenu} onChange={(e) => setInputUpdateContenu(e.target.value)} />
                         </div>
                         <div className="card_image"><img src={updateImgFile} alt="post" /></div>
-                    
+
                         <label>
-                            <input type="file" onChange={(e) => setInputImg(e.target.files[0])} />
+                            <input type="file" onChange={(e) => setInputUpdateImg(e.target.files[0])} />
                         </label>
                     </div>
                     <div className="modal-footer">
@@ -215,11 +218,11 @@ function Home() {
                     </div>
                 </div>
             </div>
-            
-            
-            
-            
-            
+
+
+
+
+
         </div>
 
     )

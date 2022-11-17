@@ -9,7 +9,7 @@ function Post(props) {
   const [inputContenu, setInputContenu] = useState('');
   const [listLikes, setListLikes] = useState([])
   const { user } = useContext(UserContext);
-
+  const [afficherFormComment, setAfficherFormComment] = useState(false);
   const datePost = new Date(props.horodatage);
 
   useEffect(() => {
@@ -51,6 +51,7 @@ function Post(props) {
               console.log('affichage nouvelle liste');
               console.log(nouvelleListCommentaires);
               setListCommentaires(nouvelleListCommentaires);
+              setAfficherFormComment(false);
             })
         }
         else {
@@ -146,23 +147,23 @@ function Post(props) {
 
 
       <div className="boutons">
-        
-        <button onClick={ajouterLike} className="btn btn"> {listLikes.find(like => (like.idAuthor == user.id)) ? <i class="bi bi-hand-thumbs-up-fill"></i> : <i className="bi bi-hand-thumbs-up"></i>}
+
+        <button onClick={ajouterLike} className="btn btn"> {listLikes.find(like => (like.idAuthor.toString() === user.id.toString())) ? <i class="bi bi-hand-thumbs-up-fill"></i> : <i className="bi bi-hand-thumbs-up"></i>}
           {listLikes.length > 0 ? listLikes.length:"  j'aime"}
         </button>
-        <button className="btn btn"><i className="bi bi-chat"></i></button>
+        <button onClick ={()=>setAfficherFormComment(true)} className="btn btn"><i className="bi bi-chat"></i></button>
         {((user.id === props.idAuthor) || (user.isAdmin)) ?
           <button onClick={supprimerPost} className="btn btn-delete"><i className="bi bi-trash3"></i></button>:null}
-  
+
   {(user.id === props.idAuthor) &&
           <button onClick={updatePost} className="btn btn-delete"><i className="bi bi-pencil-square"></i></button>}
 
 
       </div>
-      <div className='formAjoutCommentaire'>
+      {afficherFormComment && <div className='formAjoutCommentaire'>
         <input type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
         <button onClick={ajouterCommentaire}>valider</button>
-      </div>
+      </div>}
       <div className="listeCommentaires">
         {listCommentaires.map(commentaire => <Commentaire key={commentaire.id} userId={user.id} idAuthor={commentaire.idAuthor} textCom={commentaire.message} idComm={commentaire.id} supprimerCeComm={supprimerUnComm} />)}
 
