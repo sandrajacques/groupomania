@@ -30,7 +30,7 @@ export default function Inscription() {
                     res.json().then(retourBackend => {
                     alert( retourBackend.message);})
                 }
-            }            
+            }
             )
             .catch(err => alert(err))
     }

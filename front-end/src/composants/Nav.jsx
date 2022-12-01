@@ -6,7 +6,7 @@ export default function Nav() {
     const { user } = useContext(UserContext);
 
     return (
-        <nav>
+        <nav class="d-flex align-items-center">
             <h3>
                 Bienvenue {user.prenom + ' ' + user.nom}
             </h3>
@@ -18,18 +18,7 @@ export default function Nav() {
                 {/* <li><Link to="/signUp">Inscription</Link> </li> */}
                 {user.isAuth &&<li><Link to="/logout">Déconnexion</Link> </li>}
 
-                <div className="input-group md-form form-sm form-1 pl-0">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text grey lighten-3" id="basic-text1">
-                            <i className="bi bi-search"></i>
-                        </span>
-                    </div>
-                    <input
-                        className="form-control my-0 py-1 white "
-                        type="text"
-                        placeholder="recherche"
-                        aria-label="Search" ></input>
-                </div>
+
             </ul>
 
         </nav>

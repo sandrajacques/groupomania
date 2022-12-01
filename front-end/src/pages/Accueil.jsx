@@ -17,17 +17,16 @@ export default function Accueil() {
                 <div className="card-block">
                     <h2 className="card-text">Rejoignez le réseau social de Groupomania</h2>
 
-                    <div className="d-grid">
-                        <button type="submit" className="btn">
-                            Inscription <Link to="/signUp"><span className="inscription">Inscription</span></Link>
-                        </button>
+                    <div className="d-grid align-items-center">
+                        <Link to="/signUp" className="btn">Inscription</Link> 
+
                     </div>
                     <p className='card-text'>Vous avez déjà un compte ?</p>
 
-                    <div className="d-grid">
-                        <button type="submit" className="btn">
-                            {!user.isAuth && <li><Link to="/login">Connexion</Link> </li>}
-                        </button>
+                    <div className="d-grid align-items-center">
+
+                            {!user.isAuth && <Link to="/login" className='btn'>Connexion</Link>}
+
                     </div>
 
                 </div>

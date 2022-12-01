@@ -1,7 +1,8 @@
 import { useEffect, useState, useContext } from 'react'
 import Post from '../composants/Post'
 import { UserContext } from '../context/Context';
-import Nav from '../composants/Nav';
+import { useNavigate } from "react-router-dom";
+
 
 
 /*utilisation de useEffect pour charger les données du backend au lancement de la page*/
@@ -133,8 +134,11 @@ function Home() {
         )
             .catch(err => alert('erreur: ', err));
     }
-
+    let navigate = useNavigate();
     useEffect(() => {
+        if(!user.token){
+            navigate('/login');
+        }
         const token = user.token;
         fetch('http://localhost:3001/api/posts', {
             headers: {
@@ -176,7 +180,7 @@ function Home() {
 
     return (
         <div className="container">
-            <Nav></Nav>
+
             <h1>File d'actualités</h1>
 
             <input type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
