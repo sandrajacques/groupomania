@@ -21,10 +21,11 @@ body {
 }
 .navigation{
     display: flex!important;
-    flex-wrap: wrap!important;
+  /*   flex-wrap: wrap!important; */
     background-color: var(--tertiaire);
-    width: auto!important;
-    border: solid 2px var(--primaire);
+    width: 256px!important;
+
+
 }
 .card-img-top{
     width: 100%;

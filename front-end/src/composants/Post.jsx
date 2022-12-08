@@ -73,8 +73,8 @@ function Post(props) {
     fetch('http://localhost:3001/api/commentaires/' + idComm, { method: 'DELETE', })
       .then(res => {
         if (res.status === 200) {
-          //supprimer sur le frontend        
-          //cloner le state 
+          //supprimer sur le frontend
+          //cloner le state
           const listCommentairesClone = [...listCommentaires]
           //filtrer les commentaires qui ne sont pas les mêmes que l'idComm
           const listCommFiltre = listCommentairesClone.filter(comm => comm.id !== idComm)

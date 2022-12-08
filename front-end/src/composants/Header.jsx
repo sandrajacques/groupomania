@@ -7,9 +7,11 @@ export default function Header(props) {
 
   return (
 
-    <header className='header d-flex justify-content-between align-items-center'>
-      <img className="logo" src={logo} alt="logo" />
+    <header className='header d-flex flex-wrap justify-content-center align-items-center'>
+<div className="container-fluid">
+      <img className="logo mt-3"  src={logo} alt="logo" />
     <Nav/>
+    </div>
     </header>
   )
 }

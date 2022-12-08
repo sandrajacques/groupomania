@@ -183,13 +183,13 @@ function Home() {
 
             <h1>File d'actualités</h1>
 
-            <input type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
+            <input className="form-control" type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
 
-            <label>
-                <input type="file" onChange={(e) => setInputImg(e.target.files[0])} />
-            </label>
 
-            <button onClick={ajouterPost}>valider</button>
+                <input className="form-control" type="file" onChange={(e) => setInputImg(e.target.files[0])} />
+
+
+            <button className="btn m-auto w-25" onClick={ajouterPost}>valider</button>
 
             <div className='cards-list'>
                 <div className="card_title title-black">
