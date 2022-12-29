@@ -6,8 +6,8 @@ export default function Nav() {
     const { user } = useContext(UserContext);
 
     return (
-        
-        <nav class="d-flex flex-wrap justify-content-center align-items-center">
+
+        <nav className="d-flex flex-wrap justify-content-center align-items-center">
             <h3>
                 Bienvenue {user.prenom + ' ' + user.nom}
             </h3>

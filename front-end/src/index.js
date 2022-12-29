@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import Inscription from "./pages/Inscription";
 import Login from "./pages/Login";
 import Profil from "./pages/Profil";
-import { UserProvider } from "./context/Context";
+import { UserProvider } from "./context/Context";//utilisation de l'api context pour le state management
 import Accueil from "./pages/Accueil";
 import Logout from "./pages/Logout";
 
@@ -17,11 +17,11 @@ import Logout from "./pages/Logout";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
  
-    <UserProvider>
-        <BrowserRouter>
-            <Header/>          
-            <Routes>
-              <Route path="/" element={<Accueil />} />
+    <UserProvider> {/* //fourni le state de l'utilisateur en cours sur toute l'application */}
+        <BrowserRouter>{/* //Routage de l'application */}
+            <Header/>{/* //Mettre le header en dehors des routes pour le rendre visible sur toutes les pages */}
+            <Routes>{/* //associer les routes(url) avec leurs composants */}
+                <Route path="/" element={<Accueil />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/profil" element={<Profil />} />
                 <Route path="/login" element={<Login />} />
@@ -30,5 +30,5 @@ root.render(
             </Routes>
         </BrowserRouter>
     </UserProvider>
-    
+
 );

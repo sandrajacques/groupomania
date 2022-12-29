@@ -148,7 +148,7 @@ function Post(props) {
 
       <div className="boutons">
 
-        <button onClick={ajouterLike} className="btn btn"> {listLikes.find(like => (like.idAuthor.toString() === user.id.toString())) ? <i class="bi bi-hand-thumbs-up-fill"></i> : <i className="bi bi-hand-thumbs-up"></i>}
+        <button onClick={ajouterLike} className="btn btn"> {listLikes.find(like => (like.idAuthor.toString() === user.id.toString())) ? <i className="bi bi-hand-thumbs-up-fill"></i> : <i className="bi bi-hand-thumbs-up"></i>}
           {listLikes.length > 0 ? listLikes.length:"  j'aime"}
         </button>
         <button onClick ={()=>setAfficherFormComment(true)} className="btn btn"><i className="bi bi-chat"></i></button>

@@ -4,10 +4,12 @@ import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
 export default function Inscription() {
+    //states pour gérer les input du formulaire d'inscription
     const [inputName, setInputName] = useState('');
     const [inputPrenom, setInputPrenom] = useState('');
     const [inputEmail, setInputEmail] = useState('');
     const [inputPassword, setInputPassword] = useState('');
+    //Déclation de navigate pour nous permettre de naviguer vers une autre page par programmmation
     let navigate = useNavigate();
 
     function envoyerFormulaire(e) {
@@ -23,7 +25,7 @@ export default function Inscription() {
                 if (res.status === 200) {
                     res.json().then(retourBackend => {
                         alert(retourBackend.message);
-                        navigate("/");
+                        navigate("/");//aprés vérification de l'inscription redirection vers la page d'accueil
                     })
                 }
                 else {
@@ -35,71 +37,49 @@ export default function Inscription() {
             .catch(err => alert(err))
     }
     return (
-<div className='form-connexion'>
+    <div className='form-connexion'>
         <form onSubmit={envoyerFormulaire}>
             <h3>Inscription</h3>
             <div className="mb-3">
-                <label>Nom
-
-                </label>
+                <label>Nom</label>
                 <input
                     type="text"
                     className="form-control"
                     placeholder="Entrez votre nom"
-                    value={inputName} onChange={(e) => setInputName(e.target.value)}
-                />
+                    value={inputName} onChange={(e) => setInputName(e.target.value)}/>
             </div>
             <div className="mb-3">
-                <label>Prénom
-
-                </label>
+                <label>Prénom</label>
                 <input
                     type="text"
                     className="form-control"
                     placeholder="Entrez votre prénom"
-                    value={inputPrenom} onChange={(e) => setInputPrenom(e.target.value)}
-                />
+                    value={inputPrenom} onChange={(e) => setInputPrenom(e.target.value)}/>
             </div>
             <div className="mb-3">
-                <label>Adresse mail
-
-                </label>
+                <label>Adresse mail</label>
                 <input
                     type="email"
                     className="form-control"
                     placeholder="Entrez votre adresse mail"
-                    value={inputEmail} onChange={(e) => setInputEmail(e.target.value)}
-                />
+                    value={inputEmail} onChange={(e) => setInputEmail(e.target.value)}/>
             </div>
             <div className="mb-3">
                 <label>Password</label>
-                <input
+                    <input
                     type="password"
                     className="form-control"
                     placeholder="Entrez votre mot de passe"
-                    value={inputPassword} onChange={(e) => setInputPassword(e.target.value)}
-                />
-            </div>
-            <div className="mb-3">
-                <div className="custom-control custom-checkbox">
-                    <input
-                        type="checkbox"
-                        className="custom-control-input"
-                        id="customCheck1"
-                    />
-                    <label className="custom-control-label" htmlFor="customCheck1">
-                        Se souvenir de moi
-                    </label>
-                </div>
+                    value={inputPassword} onChange={(e) => setInputPassword(e.target.value)}/>
             </div>
             <div className="d-grid">
                 <button type="submit" className="btn">
-                valider l'inscription
+                Valider l'inscription
                 </button>
             </div>
         </form>
-        </div>
-    );
+    </div>
+        );
 };
 
 

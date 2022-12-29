@@ -5,7 +5,8 @@ import { UserContext } from '../context/Context';
 export default function Login() {
     const [inputEmail, setInputEmail] = useState('');
     const [inputPassword, setInputPassword] = useState('');
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);// permet de conserver les informations de l'utilisateur en cours
+
     let navigate = useNavigate();
 
     function envoyerFormulaire(e) {
@@ -20,10 +21,8 @@ export default function Login() {
             .then(res => {
                 if (res.status === 200) {
                     res.json().then(retourBackend => {
-
                     setUser({...user, ...retourBackend, isAuth:true});
-
-                        navigate("/home");
+                        navigate("/home");//redirection sur la page des posts
                     })
                 }
                 else {
@@ -39,16 +38,13 @@ export default function Login() {
             <form onSubmit={envoyerFormulaire}>{/*associer une action à la validation du formulaire*/}
                 <h3>Connexion</h3>
                 <div className="mb-3">
-                    <label>Adresse mail
-
-                    </label>
+                    <label>Adresse mail</label>
                     {/*dynamiser l'input*/}
                     <input
                         type="email"
                         className="form-control"
                         placeholder="Entrez votre adresse mail"
-                        value={inputEmail} onChange={(e) => setInputEmail(e.target.value)}
-                    />
+                        value={inputEmail} onChange={(e) => setInputEmail(e.target.value)}/>
                 </div>
                 <div className="mb-3">
                     <label>Password</label>
@@ -56,29 +52,13 @@ export default function Login() {
                         type="password"
                         className="form-control"
                         placeholder="Entrez votre mot de passe"
-                        value={inputPassword} onChange={(e) => setInputPassword(e.target.value)}
-                    />
-                </div>
-                <div className="mb-3">
-                    <div className="custom-control custom-checkbox">
-                        <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="customCheck1"
-                        />
-                        <label className="custom-control-label" htmlFor="customCheck1">
-                            Se souvenir de moi
-                        </label>
-                    </div>
+                        value={inputPassword} onChange={(e) => setInputPassword(e.target.value)}/>
                 </div>
                 <div className="d-grid">
                     <button type="submit" className="btn">
                         Valider
                     </button>
                 </div>
-                {/*  <p className="forgot-password text-right">
-                Mot de passe<Link to="/Password>Forgot">Mot de passe oublié</Link> 
-            </p> */}
             </form>
         </div>
     )

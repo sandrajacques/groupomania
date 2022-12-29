@@ -88,11 +88,7 @@ exports.modifyPost = (req, res, next) => {
 };
 
 exports.deletePosts = (req, res, next) => {
-    /*  if(req.auth.userId.toString() !==req.body.userId.toString()) {
 
-        res.status(401).json({message: "Vous n'êtes pas autorisé à créer ce post"})
-        return;
-    } */
     try {
 
         console.log("requete photo");

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext,useRef } from 'react'
 import Post from '../composants/Post'
 import { UserContext } from '../context/Context';
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,8 @@ function Home() {
     const [updateIdPost, setUpdateIdPost] = useState('');
 
     const [updateImgFile, setUpdateImgFile] = useState(null);
+
+    const inputImgRef = useRef(null);
 
     useEffect(() => {
         try {
@@ -64,6 +66,7 @@ function Home() {
                     .then(nouvelleListPosts => {
                         setInputContenu('');
                         setInputImg('');
+                        inputImgRef.current.value = null;
                         console.log('affichage nouvelle liste');
                         console.log(nouvelleListPosts);
                         setListPost(nouvelleListPosts);
@@ -137,7 +140,7 @@ function Home() {
     let navigate = useNavigate();
     useEffect(() => {
         if(!user.token){
-            navigate('/login');
+            navigate('/');
         }
         const token = user.token;
         fetch('http://localhost:3001/api/posts', {
@@ -186,10 +189,11 @@ function Home() {
             <input className="form-control" type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
 
 
-                <input className="form-control" type="file" onChange={(e) => setInputImg(e.target.files[0])} />
+                <input ref={inputImgRef} className="form-control" type="file" onChange={(e) => setInputImg(e.target.files[0])} />
 
 
             <button className="btn m-auto w-25" onClick={ajouterPost}>valider</button>
+
 
             <div className='cards-list'>
                 <div className="card_title title-black">

@@ -6,8 +6,8 @@ export default function Logout() {
     const { setUser } = useContext(UserContext);
     let navigate = useNavigate();
     useEffect(() => {
-        setUser(initialUser);
-        navigate('/');
+        setUser(initialUser);//réinitialise l'utilisateur 
+        navigate('/');//redirection sur la page d'accueil
     },[]);
   return (
     <>  </>
