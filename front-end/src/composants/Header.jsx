@@ -2,8 +2,7 @@ import React from 'react'
 import logo from '../images/logo-noir.png'
 import Nav from './Nav'
 
-
-export default function Header(props) {
+export default function Header() {
 
   return (
 

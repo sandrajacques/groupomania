@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext,useRef } from 'react'
+import { useEffect, useState, useContext, useRef } from 'react'
 import Post from '../composants/Post'
 import { UserContext } from '../context/Context';
 import { useNavigate } from "react-router-dom";
@@ -23,24 +23,21 @@ function Home() {
 
     const inputImgRef = useRef(null);
 
-    useEffect(() => {
-        try {
-            if (typeof inputUpdateImg === "string") {
-                setUpdateImgFile(inputUpdateImg);
-            }
-            else {
-                const fileReader = new FileReader();
-                fileReader.onload = (e) => {
-                    setUpdateImgFile(e.target.result);
-                }
-                fileReader.readAsDataURL(inputUpdateImg);
-            }
-        } catch (error) {
-            console.log(error.message);
+    let navigate = useNavigate();
+    useEffect(() => {// cette fonction s'execute à l'ouverture de la page en cours
+        if (!user.token) {//vérification que l'utilisateur est authentifié
+            navigate('/');
         }
-
-    }, [inputUpdateImg]);
-
+        const token = user.token;
+        fetch('http://localhost:3001/api/posts', {//affichage des Post
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then(res => res.json())
+            .then(data => setListPost(data))
+            .catch(err => alert(err))
+    }, [])
 
     function ajouterPost() {
 
@@ -79,27 +76,65 @@ function Home() {
         )
             .catch(err => alert('erreur: ', err));
     }
+    //supprimer un post
+    function supprimerUnPost(idPost, lienImage) {
+        //supprimer sur le backend
 
+        fetch('http://localhost:3001/api/posts/' + idPost, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${user.token}`,
+                photo: lienImage
+            },
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    //supprimer sur le frontend
+                    //cloner le state
+                    const listPostClone = [...listPost]
+                    //filtrer les posts qui ne sont pas les mêmes que l'idPost
+                    const listPostFiltre = listPostClone.filter(post => post.id !== idPost)
+                    //raffraichir le state
+                    setListPost(listPostFiltre)
+                }
+                else {
+                    alert('erreur')
+                }
+            })
+
+    }
+    // Fonctions pour modifier un Post
+    useEffect(() => {//Pour visualiser l'img qu'on a choisi pour le post
+        try {
+            if (typeof inputUpdateImg === "string") {
+                setUpdateImgFile(inputUpdateImg);
+            }
+            else {
+                const fileReader = new FileReader();
+                fileReader.onload = (e) => {
+                    setUpdateImgFile(e.target.result);
+                }
+                fileReader.readAsDataURL(inputUpdateImg);
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+
+    }, [inputUpdateImg]);
+    // la fonction s'executera à chaque fois que la variable  inputUpdatImg changera
     function openModal(idPost, texte, lienImage) {
-        console.log("Open Modal: **********************************************");
-        console.log(idPost);
-        console.log(texte);
-        console.log(lienImage);
-
+        //fonction associée au bouton de mise à jour d'un post 
         setInputUpdateContenu(texte);
         setInputUpdateImg(lienImage);
         setUpdateIdPost(idPost);
-        setShowModal(true);
+        setShowModal(true);//condition qui va afficher la modal
     }
 
     function hideModal() {
-        setShowModal(false);
+        setShowModal(false);//condition qui ne va pas afficher la modal
     }
 
     function savePost() {
-        console.log("Data to update: ");
-        console.log(inputUpdateContenu);
-        console.log(inputUpdateImg);
 
         const postContenu = new FormData();//insérer un fichier dans un formulaire html
         postContenu.append("post", JSON.stringify({
@@ -137,49 +172,6 @@ function Home() {
         )
             .catch(err => alert('erreur: ', err));
     }
-    let navigate = useNavigate();
-    useEffect(() => {
-        if(!user.token){
-            navigate('/');
-        }
-        const token = user.token;
-        fetch('http://localhost:3001/api/posts', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-            .then(res => res.json())
-            .then(data => setListPost(data))
-            .catch(err => alert(err))
-    }, [])
-
-    //supprimer un post
-    function supprimerUnPost(idPost, lienImage) {
-        //supprimer sur le backend
-
-        fetch('http://localhost:3001/api/posts/' + idPost, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-                photo: lienImage
-            },
-        })
-            .then(res => {
-                if (res.status === 200) {
-                    //supprimer sur le frontend
-                    //cloner le state
-                    const listPostClone = [...listPost]
-                    //filtrer les posts qui ne sont pas les mêmes que l'idPost
-                    const listPostFiltre = listPostClone.filter(post => post.id !== idPost)
-                    //raffraichir le state
-                    setListPost(listPostFiltre)
-                }
-                else {
-                    alert('erreur')
-                }
-            })
-
-    }
 
     return (
         <div className="container">
@@ -188,17 +180,13 @@ function Home() {
 
             <input className="form-control" type='text' placeholder="insérer le contenu du post" value={inputContenu} onChange={(e) => setInputContenu(e.target.value)} />
 
-
-                <input ref={inputImgRef} className="form-control" type="file" onChange={(e) => setInputImg(e.target.files[0])} />
-
+            <input ref={inputImgRef} className="form-control" type="file" onChange={(e) => setInputImg(e.target.files[0])} />
 
             <button className="btn m-auto w-25" onClick={ajouterPost}>valider</button>
-
 
             <div className='cards-list'>
                 <div className="card_title title-black">
                     {listPost.map(post => <Post key={post.id} idPost={post.id} idAuthor={post.idAuthor} updatePost={openModal} supprimerCePost={supprimerUnPost} texte={post.contenu} lienImage={post.imgUrl} horodatage={post.horodatage} />)}
-
                 </div>
             </div>
 
@@ -207,7 +195,7 @@ function Home() {
                     <div className="modal-header">
                         <h5 className="modal-title">Mise à jour Post</h5>
                         <button type="button" className="close" onClick={hideModal}>
-                            <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true"><i class="bi bi-x-circle"></i></span>
                         </button>
                     </div>
                     <div className="modal-body">

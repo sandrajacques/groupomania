@@ -21,13 +21,13 @@ export default function Profil() {
 
   }, [])//Déclaration d'un tableau vide pour exécuter cette fonction au lancement de la page profil
 
-  useEffect(() => {//affichage de l'image choisi par l'urilisateur
+  useEffect(() => {//affichage de l'image choisi par l'utilisateur
     try {
       if (typeof inputImg === "string") {
         setImage(inputImg);
       }
       else {
-        const fileReader = new FileReader();
+        const fileReader = new FileReader();//Pour que l'utilisateur puisse voir l'img avant de l'ajouter
         fileReader.onload = (e) => {
           setImage(e.target.result);
         }
@@ -94,7 +94,7 @@ export default function Profil() {
             </div>
           </div>
           <div className="col-md-5 border-right">
-            {user.isAdmin ?<span className="badge badge-success">Admin</span>:null}
+            {user.isAdmin ?<span className="badge text-bg-secondary">Admin</span>:null}
             <div className="p-3 py-5">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h4 className="text-right"> Votre Profil</h4>
@@ -120,3 +120,4 @@ export default function Profil() {
   </div>
   )
 }
+
